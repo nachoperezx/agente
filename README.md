@@ -1,69 +1,46 @@
 # Voice Agents SDK Sample App
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-![FastAPI](https://img.shields.io/badge/Built_with-FastAPI-yellow)
-![NextJS](https://img.shields.io/badge/Built_with-NextJS-blue)
-![OpenAI API](https://img.shields.io/badge/Powered_by-OpenAI_API-orange)
+Real Estate Voice Agent - Take-Home Coding Assessment
+This project is a modified version of the OpenAI Voice Agent SDK sample, adapted to serve as a voice-controlled real estate assistant. It routes user queries to specialized subagents that handle either property sales or rentals, using real data samples.
 
-This repository contains a sample app to highlight how to build [voice agents](https://platform.openai.com/docs/guides/voice-agents) using the [Agents SDK](https://openai.github.io/openai-agents-python) and Python. The backend is written using FastAPI and exposes a websocket endpoint. The front-end is written using Next.js and connects to the websocket server.
+Overview
+The app uses a main front agent that directs conversations to one of two subagents:
 
-Features:
+Sales agent: Searches houses for sale using a dataset sampled from Perth House Prices (Kaggle).
 
-- Multi-turn conversation handling
-- Push-to-talk audio mode
-- Function calling
-- Streaming responses & tool calls
+Rental agent: Searches rental listings using a dataset sampled from Airbnb Open Data (Kaggle).
 
-This app is meant to be used as a starting point to build a conversational assistant that you can customize to your needs.
+The datasets are loaded from CSV files and filtered by location and price as requested by the user.
 
-## Requirements
+Agents return top matching listings in JSON format.
 
-- OpenAI API key
-  - If you're new to the OpenAI API, [sign up for an account](https://platform.openai.com/signup).
-  - Follow the [Quickstart](https://platform.openai.com/docs/quickstart) to retrieve your API key.
-- Node.js and npm
-- `uv` installed on your system
+The voice agent backend is built on FastAPI and uses the OpenAI Agents SDK for conversation handling and tool integration.
 
-## How to use
+Implementation Details
+Created Python functions to filter sale and rental properties based on user inputs (location and max_price).
 
-1. **Set the OpenAI API key:**
+Wrapped these functions as tools using the SDK's @function_tool decorator, making them callable by agents.
 
-   2 options:
+Defined two subagents with clear instructions and assigned their respective tools.
 
-   - Set the `OPENAI_API_KEY` environment variable [globally in your system](https://platform.openai.com/docs/libraries#create-and-export-an-api-key)
-   - Set the `OPENAI_API_KEY` environment variable in the project: Create a `.env` file at the root of the project and add the following line (see `.env.example` for reference):
+Developed a main triage agent that interprets user intent and delegates queries to the correct subagent.
 
-   ```bash
-   OPENAI_API_KEY=<your_api_key>
-   ```
+Integrated the agents into the existing voice workflow, enabling multi-turn conversations with voice input/output.
 
-2. **Clone the Repository:**
+Used detailed inline comments to explain code functionality and design decisions.
 
-   ```bash
-   git clone https://github.com/openai/openai-voice-agent-sdk-sample.git
-   cd openai-voice-agent-sdk-sample/ 
-   ```
+Known Limitations
+The app currently returns results as JSON strings, which is functional but not fully polished for end-user presentation.
 
-3. **Install dependencies:**
+Occasional API errors occur related to duplicated message IDs, impacting stability in streaming responses.
 
-   You will have to install both the dependencies for the front-end and the server. To do this run in the project root:
+Further improvements could include better conversational formatting, error handling, and UI enhancements.
 
-   ```bash
-   make sync
-   ```
+Tools Used
+OpenAI Agents SDK for agent orchestration and conversation management.
 
-4. **Run the app:**
+Pandas for CSV data loading and filtering.
 
-   ```bash
-   make serve
-   ```
+FastAPI to build the backend API and websocket server.
 
-   The app will be available at [`http://localhost:3000`](http://localhost:3000).
-
-## Contributing
-
-You are welcome to open issues or submit PRs to improve this app, however, please note that we may not review all suggestions.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+ActivityWatch to track development workflow (included in final submission).
